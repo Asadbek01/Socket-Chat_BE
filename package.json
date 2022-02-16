@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "express-list-endpoints": "^6.0.0",
+    "http": "^0.0.1-security",
+    "mongoose": "^6.2.1",
+    "nodemon": "^2.0.15",
+    "socket.io": "^4.4.1"
+  },
+  "name": "socket-chat_be",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src"  
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asadbek01/Socket-Chat_BE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Asadbek01/Socket-Chat_BE/issues"
+  },
+  "homepage": "https://github.com/Asadbek01/Socket-Chat_BE#readme"
+}
