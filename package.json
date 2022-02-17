@@ -15,7 +15,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src"  
+    "dev": "nodemon -r dotenv/config src"
   },
   "repository": {
     "type": "git",
@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/Asadbek01/Socket-Chat_BE/issues"
   },
-  "homepage": "https://github.com/Asadbek01/Socket-Chat_BE#readme"
+  "homepage": "https://github.com/Asadbek01/Socket-Chat_BE#readme",
+  "devDependencies": {
+    "dotenv": "^16.0.0"
+  }
 }
