@@ -1,49 +1,70 @@
+import express from "express";
 import { Server } from "socket.io";
-import { createServer } from 'http';
-import mongoose from 'mongoose'
-import app from './app.js'
-import RoomModel from "./room/model.js";
+import { createServer } from "http";
+import cors from "cors";
+
+// We can initialize a in-memory shared array that will be used in our socket handlers
+// as well as in our express routes.
+
+let onlineUsers = []
+
+// Initializing our express app
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/online-users', (req, res) => {
+    res.send({ onlineUsers })
+})
 
 
-const httpServer = createServer(app)
+
+// Handling some express routes/routers...
+//....
+
+// Creating a new HTTP server using the standard NodeJS http module 
+// passing our express app for the configuration of the routes*
+const httpServer = createServer(app);
+
+// * This is important because the Server from socket.io accepts in input only a standard HTTP server
 const io = new Server(httpServer, { /* options */ });
 
 io.on("connection", (socket) => {
-    console.log(socket.id, socket.rooms)
+    // ...
+    console.log(socket.id)
 
-    socket.on("setUsername", ({ username, room }) => {
+    socket.emit("welcome", { message: "Welcome!" })
+
+    socket.on("setUsername", ({ username }) => {
         console.log(username)
 
-       
+        onlineUsers.push({ username, id: socket.id })
 
-        onlineUsers.push({ username, id: socket.id, room })
+        // Emits to the other end of the channel
+        socket.emit("loggedin")
 
-        socket.emit('loggedin')
-        socket.broadcast.emit('newConnection')
+        // Emits to the other end of *every other* channel
+        socket.broadcast.emit("newConnection")
+
+        // Emits to every connected socket
+        // io.sockets.emit() 
     })
 
-    socket.on("sendmessage", async ({ message, room }) => {
-
-        try {
-            await RoomModel.findOneAndUpdate({ name: room }, {
-                $push: { messages: message }
-            })
-
-            socket.to(room).emit("message", message)
-
-        } catch (error) {
-            socket.emit("error", { error: "Can't save to DB. Try again later." })
-        }
-
+    socket.on("sendmessage", (message) => {
+        console.log(message)
+        socket.broadcast.emit("message", message)
     })
 
     socket.on("disconnect", () => {
-        onlineUsers = onlineUsers.filter(u => u.id !== socket.id)
+        onlineUsers = onlineUsers.filter(user => user.id !== socket.id)
+        socket.broadcast.emit("disconnectedUser")
     })
+
 });
 
-mongoose.connect(process.env.MONGO_CONNECTION)
-.then(() => {
-    console.log("connected to mongo")
-    httpServer.listen(4000);
-})
+// CAUTION: we do not app.listen() 
+// but rather httpServer.listen()
+httpServer.listen(3030, () => {
+    console.log("Server is listening on port 3030");
+});
