@@ -31,14 +31,8 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, { /* options */ });
 
 io.on("connection", (socket) => {
-    // ...
-    console.log(socket.id)
-
-    socket.emit("welcome", { message: "Welcome!" })
-
+    
     socket.on("setUsername", ({ username }) => {
-        console.log(username)
-
         onlineUsers.push({ username, id: socket.id })
 
         // Emits to the other end of the channel
