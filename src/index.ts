@@ -2,11 +2,12 @@ import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
+import { OnlineUser } from "./types";
 
 // We can initialize a in-memory shared array that will be used in our socket handlers
 // as well as in our express routes.
 
-let onlineUsers = []
+let onlineUsers: OnlineUser[] = []
 
 // Initializing our express app
 const app = express();
@@ -14,9 +15,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/online-users', (req, res) => {
-    res.send({ onlineUsers })
-})
+// app.get('/online-users', (req, res) => {
+//     res.send({ onlineUsers })
+// })
 
 
 
@@ -50,10 +51,7 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("message", message)
     })
 
-    socket.on("disconnect", () => {
-        onlineUsers = onlineUsers.filter(user => user.id !== socket.id)
-        socket.broadcast.emit("disconnectedUser")
-    })
+ 
 
 });
 
