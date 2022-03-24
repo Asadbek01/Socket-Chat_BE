@@ -33,9 +33,8 @@ const io = new Server(httpServer, { /* options */ });
 
 io.on("connection", (socket) => {
     
-    socket.on("setUsername", ({ username }) => {
+    socket.on("setUsername", ({ username  }) => {
         onlineUsers.push({ username, id: socket.id })
-
         // Emits to the other end of the channel
         socket.emit("loggedin")
 
@@ -60,3 +59,7 @@ io.on("connection", (socket) => {
 httpServer.listen(3030, () => {
     console.log("Server is listening on port 3030");
 });
+
+function id(id: any) {
+    throw new Error("Function not implemented.");
+}
